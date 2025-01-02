@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Include Demo</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .info {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid black;
+        background: #ffffca;
+        margin: 0;
+        margin-bottom: 20px;
+      }
+
+      .info.warning {
+        color: #da4a4a;
+      }
+
+      main {
+        background: #62af62;
+        padding: 100px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Nginx solutions</h1>
+    <h2>
+      <a href="https://nginx.org/en/docs/http/ngx_http_ssi_module.html#commands"
+        >Server Side Includes</a
+      >
+    </h3>
+
+    <h3>SSI Local File</h3>
+    <p class="info">Include files served by Nginx</p>
+    <!--#include virtual="/header.html" -->
+
+    <h3>SSI Remote</h3>
+    <p class="info">You can include anything as long as it can be proxied</p>
+    <!--#include virtual="/header-proxy" -->
+
+    <h3>SSI Variable</h3>
+    <p class="info">
+      Great for repeating the same element multiple times around the page
+    </p>
+    <!--# block name="variable" --><!--# endblock -->
+    <!--# include virtual="/header-proxy" stub="variable" -->
+
+    <h3>
+      Nginx Replace with
+      <a
+        href="https://nginx.org/en/docs/http/ngx_http_sub_module.html#sub_filter"
+        >sub_filter</a
+      >
+    </h3>
+    <!-- Replaced by Nginx -->
+    <p class="info">Can't fetch remote data though!</p>
+    <br />
+    <div id="header"></div>
+
+    <div style="margin: 100px 0px">
+      <h1>Other Approaches</h1>
+      <p class="info warning">
+        <b>Everything is client side = Bad for <a href="https://web.dev/articles/cls">layout shift</a> :(</b>
+      </p>
+
+      <div style="display: flex; flex-direction: column">
+        <h3>&lsaquo;embed&rsaquo; element</h3>
+        <embed type="text/html" src="/header-proxy" />
+
+        <h3>&lsaquo;iframe&rsaquo; element</h3>
+        <iframe src="/header-proxy"></iframe>
+
+        <h3>&lsaquo;object&rsaquo; element</h3>
+        <object data="/header-proxy"></object>
+
+        <h3>Custom Script</h3>
+        <div id="custom-script"></div>
+        <script defer>
+          (async () => {
+            const root = document.querySelector("#custom-script");
+
+            if (root) {
+              const response = await fetch("/header-proxy");
+
+              if (response.ok) {
+                root.innerHTML = await response.text();
+              }
+            }
+          })();
+        </script>
+      </div>
+    </div>
+
+    <main>Origin Body</main>
+  </body>
+</html>
