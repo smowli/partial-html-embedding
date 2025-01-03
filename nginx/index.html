@@ -28,6 +28,10 @@
         background: #62af62;
         padding: 100px 20px;
       }
+
+      ul {
+        padding-left: 20px;
+      }
     </style>
   </head>
   <body>
@@ -47,9 +51,12 @@
     <!--#include virtual="/header-proxy" -->
 
     <h3>SSI Variable</h3>
-    <p class="info">
-      Great for repeating the same element multiple times around the page
-    </p>
+    <div class="info">
+      <ul>
+        <li>Does not display error when include fails</li>
+        <li>Great for repeating the same element multiple times around the page</li>
+      </ul>
+    </div>
     <!--# block name="variable" --><!--# endblock -->
     <!--# include virtual="/header-proxy" stub="variable" -->
 
